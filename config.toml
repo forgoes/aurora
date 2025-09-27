@@ -1,0 +1,21 @@
+[mode]
+debug = true
+
+[http]
+host = "0.0.0.0"
+port = 9000
+
+[slack]
+secret = ""
+token = ""
+
+[mysql]
+host = "127.0.0.1"
+port = 23306
+db = ""
+user = ""
+password = ""
+maxOpen = 300
+maxIdle = 100
+maxLife = 3600
+migrate = true
