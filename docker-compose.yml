@@ -1,0 +1,43 @@
+networks:
+  aurora:
+
+services:
+  mysql:
+    container_name: aurora-mysql
+    image: mysql:latest
+    ports:
+      - "23306:3306"
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_DATABASE: aurora
+      MYSQL_USER: ${DEFAULT_USER}
+      MYSQL_PASSWORD: ${DEFAULT_PASSWORD}
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+    volumes:
+      - aurora-mysql:/var/lib/mysql
+    networks:
+      - aurora
+
+  phpmyadmin:
+    container_name: aurora-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${ROOT_PASSWORD}
+    ports:
+      - "18080:80"
+    networks:
+      - aurora
+
+
+# docker volume create aurora-mysql
+volumes:
+  aurora-mysql:
+    external: true

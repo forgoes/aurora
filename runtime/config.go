@@ -58,14 +58,19 @@ type SlackConfig struct {
 	Token  string
 }
 
+type OpenAIConfig struct {
+	ApiKey string
+}
+
 type Config struct {
-	Mode  Mode
-	HTTP  HTTP
-	Mysql MysqlConfig
-	Redis RedisConfig
-	Email EmailConfig
-	Jwt   JWT
-	Slack SlackConfig
+	Mode   Mode
+	HTTP   HTTP
+	Mysql  MysqlConfig
+	Redis  RedisConfig
+	Email  EmailConfig
+	Jwt    JWT
+	Slack  SlackConfig
+	OpenAI OpenAIConfig
 }
 
 func loadConfig(configFile string) (*Config, error) {

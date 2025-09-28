@@ -4,6 +4,9 @@ import (
 	"context"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+
+	"github.com/forgoes/aurora/models"
 )
 
 type Runtime struct {
@@ -11,6 +14,7 @@ type Runtime struct {
 	Config *Config
 	Mysql  *gorm.DB
 	Slack  *Slack
+	OpenAI *OpenAI
 }
 
 func New() (*Runtime, error) {
@@ -28,19 +32,23 @@ func New() (*Runtime, error) {
 	}
 	rt.Config = config
 
-	s, err := NewSlack(config)
+	s, err := initSlack(config)
 	if err != nil {
 		return nil, err
 	}
 	rt.Slack = s
-	
-	/*
-		db, err := initMysql(&config.Mysql)
-		if err != nil {
-			return nil, err
-		}
-		rt.Mysql = db
-	*/
+
+	db, err := initMysql(&config.Mysql)
+	if err != nil {
+		return nil, err
+	}
+	rt.Mysql = db
+
+	oi, err := initOpenAI(rt)
+	if err != nil {
+		return nil, err
+	}
+	rt.OpenAI = oi
 
 	return rt, nil
 }
@@ -58,4 +66,22 @@ func (r *Runtime) Close(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (r *Runtime) CreateEvent(userID, channelID, appID, eventID, eventTS, content string, isBot bool, replyToEvent *string) error {
+	msg := models.Event{
+		UserID:       userID,
+		ChannelID:    channelID,
+		AppID:        appID,
+		EventID:      eventID,
+		EventTS:      eventTS,
+		Content:      content,
+		IsBot:        isBot,
+		ReplyToEvent: replyToEvent,
+	}
+
+	return r.Mysql.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "event_id"}},
+		DoNothing: true,
+	}).Create(&msg).Error
 }

@@ -9,6 +9,9 @@ port = 9000
 secret = ""
 token = ""
 
+[openai]
+apikey = ""
+
 [mysql]
 host = "127.0.0.1"
 port = 23306

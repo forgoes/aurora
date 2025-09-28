@@ -8,7 +8,7 @@ type Slack struct {
 	*slack.Client
 }
 
-func NewSlack(config *Config) (*Slack, error) {
+func initSlack(config *Config) (*Slack, error) {
 	cli := slack.New(config.Slack.Token)
 
 	return &Slack{
