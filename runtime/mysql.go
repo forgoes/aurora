@@ -35,7 +35,7 @@ func initMysql(config *MysqlConfig) (*gorm.DB, error) {
 	}
 	if config.Migrate {
 		if err := db.AutoMigrate(
-			&models.Event{},
+			&models.Message{},
 		); err != nil {
 			return nil, err
 		}

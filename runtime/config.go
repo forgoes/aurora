@@ -56,6 +56,7 @@ type JWT struct {
 type SlackConfig struct {
 	Secret string
 	Token  string
+	Bot    string
 }
 
 type OpenAIConfig struct {
