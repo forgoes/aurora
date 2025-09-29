@@ -32,5 +32,3 @@ go.work.sum
 .vscode/
 
 config.*.toml
-
-bot
